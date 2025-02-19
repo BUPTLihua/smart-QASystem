@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能问答系统</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .history {
+            margin-top: 20px;
+        }
+
+        .qa-item {
+            background-color: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border-left: 4px solid #007bff;
+        }
+
+        .question {
+            color: #2c3e50;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .answer {
+            color: #34495e;
+            white-space: pre-wrap;
+        }
+
+        .timestamp {
+            color: #6c757d;
+            font-size: 0.8em;
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        #loading {
+            display: none;
+            color: #666;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .error {
+            color: #dc3545;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #f8d7da;
+            border-radius: 4px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>智能问答系统</h1>
+
+        <div class="input-area">
+            <input type="text" id="question" placeholder="请输入您的问题...">
+            <button onclick="askQuestion()" id="submitBtn">提交问题</button>
+        </div>
+
+        <div id="error" class="error"></div>
+        <div id="loading">正在思考中...</div>
+
+        <div class="history" id="history"></div>
+    </div>
+
+    <script>
+        async function askQuestion() {
+            const questionInput = document.getElementById('question');
+            const submitBtn = document.getElementById('submitBtn');
+            const loading = document.getElementById('loading');
+            const error = document.getElementById('error');
+            const history = document.getElementById('history');
+
+            const question = questionInput.value.trim();
+            if (!question) return;
+
+            // 禁用输入和按钮
+            questionInput.disabled = true;
+            submitBtn.disabled = true;
+            loading.style.display = 'block';
+            error.style.display = 'none';
+
+            try {
+                // 这里替换为你的接口地址
+                const response = await fetch('http://localhost:5000/qa', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ question })
+                });
+
+                if (!response.ok) {
+                    throw new Error('请求失败');
+                }
+
+                const data = await response.json();
+
+                // 创建新的问答记录
+                const qaItem = document.createElement('div');
+                qaItem.className = 'qa-item';
+                qaItem.innerHTML = `
+                    <div class="question">问：${question}</div>
+                    <div class="answer">答：${data.answer}</div>
+                    <div class="timestamp">${new Date().toLocaleString()}</div>
+                `;
+
+                // 将新记录插入到历史记录的最前面
+                history.insertBefore(qaItem, history.firstChild);
+                questionInput.value = '';
+
+            } catch (err) {
+                error.textContent = '系统暂时无法回应，请稍后再试';
+                error.style.display = 'block';
+            } finally {
+                // 恢复输入和按钮
+                questionInput.disabled = false;
+                submitBtn.disabled = false;
+                loading.style.display = 'none';
+                questionInput.focus();
+            }
+        }
+
+        // 监听回车键
+        document.getElementById('question').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                askQuestion();
+            }
+        });
+    </script>
+</body>
+</html>
