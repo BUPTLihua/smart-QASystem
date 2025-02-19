@@ -14,7 +14,7 @@ app = Flask(__name__)
 CORS(app)  # 启用CORS，允许跨域请求
 
 # 初始化QA系统
-API_KEY = "sk-TkFjGCG1NdXESZKa39D709663a7742Ba9e35359c63145039"  # 这里替换成你的API密钥
+API_KEY = ""  # 这里替换成你的API密钥
 qa_system = StrictQASystem(api_key=API_KEY)  # 创建QA系统实例
 
 
