@@ -208,7 +208,7 @@ class StrictQASystem:
 # 使用示例
 if __name__ == "__main__":
     # 设置DeepSeek API密钥
-    API_KEY = "sk-TkFjGCG1NdXESZKa39D709663a7742Ba9e35359c63145039"
+    API_KEY = ""#输入你的API秘钥
 
     # 创建问答系统实例
     qa = StrictQASystem(api_key=API_KEY)
