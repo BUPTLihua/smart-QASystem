@@ -8,3 +8,5 @@
 
 
 使用程序的顺序是，先在终端使用爬虫指令启动wiki_spider1.py,再使用vectorstore_enhanced.py,再使用qa_system.py，最后启动app.py
+
+该程序是自己第一次完成的项目，是自己自学并结合ai的帮助独立完成的项目，有诸多瑕疵，望路过的各位大佬帮忙指点QWQ
