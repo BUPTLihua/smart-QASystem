@@ -5,3 +5,6 @@
 
 爬虫文件中实现了对指定网站的信息爬取，初步处理以及存储到数据库中
 源文件实现了数据库向量化，并通过调用deepseek模型api进行对客户的问题进行针对数据库内容的回答
+
+
+使用程序的顺序是，先在终端使用爬虫指令启动wiki_spider1.py,再使用vectorstore_enhanced.py,再使用qa_system.py，最后启动app.py
